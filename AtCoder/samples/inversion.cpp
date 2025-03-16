@@ -1,8 +1,8 @@
 #include <bits/stdc++.h>
 #include <print.hpp>
 using namespace std;
-// #include <atcoder/all>
-// using namespace atcoder;
+#include <atcoder/all>
+using namespace atcoder;
 #define ll long long
 #define ld long double
 #define REP(i,m,n) for(int i=(int)(m); i<(int)(n); i++)
@@ -80,6 +80,30 @@ ll inversion(const vector<T>& A) {
   }
   return sum;
 };
+
+template<typename T>
+ll inversion2(const vector<T>& A) {
+  int n = A.size();
+  vector<int> id(n);
+  iota(all(id), 0);
+  sort(all(id), [&](int i, int j) {
+    return (A[i] == A[j] ? i < j : A[i] > A[j]);
+  }
+  fenwick_tree<ll> bit(n);
+  ll sum = 0;
+  int l = 0;
+  while(l < n) {
+    int r = l;
+    while(r < n && A[id[r]] == A[id[l]]) {
+      sum += bit.sum(0, id[r]);
+      r++;
+    }
+    REP(i, l, r) bit.add(id[i], 1);
+    l = r;
+  }
+  return sum;
+};
+
 int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);
